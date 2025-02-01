@@ -1,0 +1,13 @@
+{
+  "name": "htmlrpg",
+  "version": "1.0.0",
+  "description": "Simple RPG generated with JS and HTML",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Aaron McDonald",
+  "license": "ISC",
+  "type": "module"
+}
