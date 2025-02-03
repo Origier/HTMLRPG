@@ -34,12 +34,16 @@ const myServer = createServer((req, res) =>  {
         })
 
         req.on('end', () => {
-            res.writeHead(200, {'content-type': 'text/html'});
-            const bodyArgs = parseBody(body);
-            playerLocation.x += parseInt(bodyArgs.right) - parseInt(bodyArgs.left);
-            playerLocation.y += parseInt(bodyArgs.up) - parseInt(bodyArgs.down);
-            engine.insertVariables({playerLocation: playerLocation});
-            res.write(engine.getHTMLString());
+            if (req.url === '/moveplayer') {
+                res.writeHead(200, {'content-type': 'text/html'});
+                const bodyArgs = parseBody(body);
+                playerLocation.x += parseInt(bodyArgs.right) - parseInt(bodyArgs.left);
+                playerLocation.y += parseInt(bodyArgs.up) - parseInt(bodyArgs.down);
+                engine.insertVariables({playerLocation: playerLocation});
+                res.write(engine.getHTMLString());
+            } else {
+                res.write('No endpoint found');
+            }
             res.end();
         })
     }
