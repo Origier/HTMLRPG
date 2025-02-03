@@ -23,7 +23,7 @@ class HTMLEngine {
     }
 
     #insertJavascript(htmlComponents) {
-        const indexScript = htmlComponents.findIndex((value) => value.indexOf('script') !== -1);
+        const indexScript = htmlComponents.findIndex((value) => value.search(/script.*>/) !== -1);
         const endIndexScript = htmlComponents.findIndex((value) => value.indexOf('/script>') !== -1);
         let htmlScriptString = htmlComponents[indexScript];
         const srcIndex = htmlScriptString.indexOf('src');
@@ -52,6 +52,14 @@ class HTMLEngine {
         secondHalf.unshift(''); // Added to ensure the arrays join correctly
 
         this.#htmlString = firstHalf.join('<') + javascriptString + secondHalf.join('<');
+    }
+
+    insertVariables(variablesObj) {
+        // Find each variable name in the html document and replace it with the value
+        for (let variable in variablesObj) {
+            const regex = new RegExp(`\\$\{${variable}\}`);
+            this.#htmlString = this.#htmlString.replace(regex, variablesObj[variable].toString());
+        }
     }
     
     getHTMLString() {

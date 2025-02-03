@@ -6,7 +6,27 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello Test</h1>
+    <h1>Hello and Welcome to HTML RPG! The one and hopefully only RPG based entirely out of HTML and Javascript!</h1>
+    <form action="/moveplayer" method="post">
+        <div>
+            <label for="left">Left:</label>
+            <input type="number" id="left" name="left" onclick="move(this.id)" value="0">
+        </div>
+        <div>
+            <label>Right:</label>
+            <input type="number" id="right" name="right" onclick="move(this.id)" value="0">
+        </div>
+        <div>
+            <label>Up:</label>
+            <input type="number" id="up" name="up" onclick="move(this.id)" value="0">
+        </div>
+        <div>
+            <label>Down:</label>
+            <input type="number" id="down" name="down" onclick="move(this.id)" value="0">
+        </div>
+        <input type="submit" id="movePlayer">
+    </form>
+    <h3>Player current location: ${playerLocation}</h3>
     <script src={./src/index.js}></script>
 </body>
 </html>
