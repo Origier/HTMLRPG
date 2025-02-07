@@ -37,8 +37,23 @@ const myServer = createServer((req, res) =>  {
             if (req.url === '/moveplayer') {
                 res.writeHead(200, {'content-type': 'text/html'});
                 const bodyArgs = parseBody(body);
-                playerLocation.x += parseInt(bodyArgs.right) - parseInt(bodyArgs.left);
-                playerLocation.y += parseInt(bodyArgs.up) - parseInt(bodyArgs.down);
+                for (let arg in bodyArgs) {
+                    switch (arg) {
+                        case 'left':
+                            playerLocation.x -= 1;
+                            break;
+                        case 'right':
+                            playerLocation.x += 1;
+                            break;
+                        case 'down':
+                            playerLocation.y -= 1;
+                            break;
+                        case 'up':
+                            playerLocation.y += 1;
+                            break;
+                    } 
+                }
+
                 engine.insertVariables({playerLocation: playerLocation});
                 res.write(engine.getHTMLString());
             } else {

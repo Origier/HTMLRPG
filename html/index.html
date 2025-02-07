@@ -9,22 +9,17 @@
     <h1>Hello and Welcome to HTML RPG! The one and hopefully only RPG based entirely out of HTML and Javascript!</h1>
     <form action="/moveplayer" method="post">
         <div>
-            <label for="left">Left:</label>
-            <input type="number" id="left" name="left" onclick="move(this.id)" value="0">
+            <input type="submit" id="left" name="left" onclick="move(this.id)" value="&#8592;">
         </div>
         <div>
-            <label>Right:</label>
-            <input type="number" id="right" name="right" onclick="move(this.id)" value="0">
+            <input type="submit" id="right" name="right" onclick="move(this.id)" value="&#8594;">
         </div>
         <div>
-            <label>Up:</label>
-            <input type="number" id="up" name="up" onclick="move(this.id)" value="0">
+            <input type="submit" id="up" name="up" onclick="move(this.id)" value="&#8593;">
         </div>
         <div>
-            <label>Down:</label>
-            <input type="number" id="down" name="down" onclick="move(this.id)" value="0">
+            <input type="submit" id="down" name="down" onclick="move(this.id)" value="&#8595;">
         </div>
-        <input type="submit" id="movePlayer">
     </form>
     <h3>Player current location: ${playerLocation}</h3>
     <script src={./src/index.js}></script>
