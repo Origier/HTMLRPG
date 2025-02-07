@@ -3,10 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Map</title>
 </head>
+<style>
+
+.mapContainer {
+    margin: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: ${columns};
+    background-color: cadetblue;  
+}
+
+.mapContainer > div {
+    background-color: white;
+    line-height: 8px;
+}
+</style>
 <body>
-    <h1>Hello and Welcome to HTML RPG! The one and hopefully only RPG based entirely out of HTML and Javascript!</h1>
+    <div id="mapArea" class="mapContainer">
+        ${mapArea}
+    </div>
     <form action="/moveplayer" method="post">
         <div>
             <input type="submit" id="left" name="left" onclick="move(this.id)" value="&#8592;">
@@ -22,6 +41,6 @@
         </div>
     </form>
     <h3>Player current location: ${playerLocation}</h3>
-    <script src={./src/index.js}></script>
+    <script src={./src/map.js}></script>
 </body>
 </html>
