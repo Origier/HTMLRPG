@@ -1,21 +1,12 @@
 import { HTMLEngine } from './htmlEngine.js';
 import { createServer } from 'node:http';
-
+import { Player } from './player.js';
 
 // HTML File Paths
 const homePath = './html/home.html';
 const mapPath = './html/map.html';
 
-// Save player location as a variable to update with post requests
-let playerLocation = {
-    x: 0,
-    y: 0,
-    toString: function() {
-        return `${this.x}, ${this.y}`;
-    }
-};
-
-let playerDefaultSymbol = '&#929;';
+const player = new Player();
 
 // Map to represent the world map - contains sizing information along with object information
 // TODO: Implement HTML to resend a post response to the server anytime the screen size changes
@@ -32,7 +23,7 @@ const viewPaddingHorizontal = 40;
 const viewPaddingVertical = 200;
 const boxSize = 8;  // Size of a UTF-8 character 8x8 pixels - this is intended to create square map pixels
 
-function renderMapHTMLString(mapObj, viewField, playerLocation) {   
+function renderMapHTMLString(mapObj, viewField) {   
     const gridColumns = Math.floor(viewField.width / boxSize);
     const gridRows = Math.floor(viewField.height / boxSize);
     let htmlOut = "";
@@ -60,7 +51,6 @@ function parseBody(requestBody) {
     return argsObj;
 }
 
-
 // Handles the current html that is loaded by the server
 let currentPath = homePath;
 
@@ -72,7 +62,6 @@ const myServer = createServer((req, res) =>  {
             currentPath = homePath;
             engine = new HTMLEngine(currentPath);
         }
-        engine.insertVariables({playerLocation: playerLocation});
         res.writeHead(200, {'content-type': 'text/html'});
         res.write(engine.getHTMLString());
         res.end();
@@ -86,27 +75,29 @@ const myServer = createServer((req, res) =>  {
             if (req.url === '/moveplayer') {
                 res.writeHead(200, {'content-type': 'text/html'});
                 const bodyArgs = parseBody(body);
+                const playerMovement = { x: 0, y: 0 };
                 for (let arg in bodyArgs) {
                     switch (arg) {
                         case 'left':
-                            playerLocation.x -= 1;
+                            playerMovement.x -= 1;
                             break;
                         case 'right':
-                            playerLocation.x += 1;
+                            playerMovement.x += 1;
                             break;
                         case 'down':
-                            playerLocation.y -= 1;
+                            playerMovement.y -= 1;
                             break;
                         case 'up':
-                            playerLocation.y += 1;
+                            playerMovement.y += 1;
                             break;
                     } 
                 }
+                player.movePlayer(playerMovement);
                 const renderOut = renderMapHTMLString(map, playerView);
                 const htmlMap = renderOut.html;
                 const columns = renderOut.columns;
                 engine = new HTMLEngine(currentPath);
-                engine.insertVariables({playerLocation: playerLocation, mapArea: htmlMap, columns: columns});
+                engine.insertVariables({playerLocation: player.getPlayerLocationString(), mapArea: htmlMap, columns: columns});
                 res.write(engine.getHTMLString());
             } else if (req.url === '/map') {
                 currentPath = mapPath;
@@ -117,7 +108,7 @@ const myServer = createServer((req, res) =>  {
                 const htmlMap = renderOut.html;
                 const columns = renderOut.columns;
                 engine = new HTMLEngine(currentPath);
-                engine.insertVariables({playerLocation: playerLocation, mapArea: htmlMap, columns: columns});
+                engine.insertVariables({playerLocation: player.getPlayerLocationString(), mapArea: htmlMap, columns: columns});
                 res.write(engine.getHTMLString());
             } else {
                 res.write('No endpoint found');
