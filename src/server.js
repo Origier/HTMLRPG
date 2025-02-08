@@ -1,6 +1,11 @@
 import { HTMLEngine } from './htmlEngine.js';
 import { createServer } from 'node:http';
 
+
+// HTML File Paths
+const homePath = './html/home.html';
+const mapPath = './html/map.html';
+
 // Save player location as a variable to update with post requests
 let playerLocation = {
     x: 0,
@@ -57,13 +62,16 @@ function parseBody(requestBody) {
 
 
 // Handles the current html that is loaded by the server
-let currentPath = './html/home.html';
+let currentPath = homePath;
 
 let engine = new HTMLEngine(currentPath);
 
 const myServer = createServer((req, res) =>  {
-    engine = new HTMLEngine(currentPath);
     if (req.method === 'GET') {
+        if (req.url === '/' || req.url === '/home') {
+            currentPath = homePath;
+            engine = new HTMLEngine(currentPath);
+        }
         engine.insertVariables({playerLocation: playerLocation});
         res.writeHead(200, {'content-type': 'text/html'});
         res.write(engine.getHTMLString());
@@ -94,11 +102,14 @@ const myServer = createServer((req, res) =>  {
                             break;
                     } 
                 }
-
-                engine.insertVariables({playerLocation: playerLocation});
+                const renderOut = renderMapHTMLString(map, playerView);
+                const htmlMap = renderOut.html;
+                const columns = renderOut.columns;
+                engine = new HTMLEngine(currentPath);
+                engine.insertVariables({playerLocation: playerLocation, mapArea: htmlMap, columns: columns});
                 res.write(engine.getHTMLString());
             } else if (req.url === '/map') {
-                currentPath = './html/map.html';
+                currentPath = mapPath;
                 const bodyArgs = parseBody(body);
                 playerView.height = bodyArgs.height - viewPaddingVertical;
                 playerView.width = bodyArgs.width - viewPaddingHorizontal;
